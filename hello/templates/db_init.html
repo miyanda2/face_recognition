@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<script>
+    function handleButtonClick() {
+      $.get('/db_create_table', function(data) {
+        if (data === 'success') {
+          console.log('DB table created successfully');
+          window.location.href = '';
+        }
+      });
+    }
+</script>
+
+<div class="jumbotron">
+    <div class="container">
+        <button id="createTableBtn"
+                type="button"
+                class="btn btn-primary"
+                onclick="handleButtonClick()">
+            Create table
+        </button>
+    </div>
+</div>
+
+{% endblock %}

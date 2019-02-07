@@ -18,4 +18,6 @@ urlpatterns = [
     path("", hello.views.index, name="index"),
     path("db/", hello.views.db, name="db"),
     path("admin/", admin.site.urls),
+    path('db_init/', hello.views.db_init, name='db_init'),
+    path('db_create_table/', hello.views.db_create_table, name='db_create_table')
 ]
