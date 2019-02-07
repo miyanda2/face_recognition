@@ -1,9 +1,9 @@
 {
-  "name": "Start on Heroku: Python",
-  "description": "A barebones Python app, which can easily be deployed to Heroku.",
+  "name": "flickr face recognition",
+  "description": "int20h test task implementation by rm -rf team",
   "image": "heroku/python",
-  "repository": "https://github.com/heroku/python-getting-started",
-  "keywords": ["python", "django" ],
+  "repository": "https://github.com/rmrf-int20h/test_task",
+  "keywords": ["python", "django", "react", "postgresql" ],
   "addons": [ "heroku-postgresql" ],
   "env": {
     "SECRET_KEY": {
