@@ -80,7 +80,7 @@ heroku pg:pull postgresql-parallel-33995 mylocaldb --app int20h-rmrf-test
 #configuring for local use
 echo "[ ] Configuring python and heroku to run locally"
 python3 manage.py collectstatic
-heroku local
+heroku local &
 echo "[+] OK"
 echo "[+] All must work now if not please write to t.me/verbalius"
 echo "[---------------------------------------------------------]"
