@@ -21,8 +21,8 @@ pip3 install django gunicorn django-heroku psycopg2-binary dj-database-url reque
 echo "[ ]Configuring postgresql.."
 sudo -u postgres psql -c "CREATE USER $(whoami) WITH SUPERUSER;" 
 sudo -u postgres psql -c "ALTER USER $(whoami) WITH CREATEDB"
-sudo -u postgres createdb $MyUsername
-export DATABASE_URL=postgres://$MyUsername
+#sudo -u postgres createdb $(whoami)
+export DATABASE_URL=postgres://$(whoami)
 echo "[+] OK"
 #postgresql done
 
@@ -76,11 +76,12 @@ case "$response" in
     *)
         ;;
 esac
-heroku pg:pull postgresql-parallel-33995 mylocaldb --app int20h-rmrf-test
+#PGUSER=wxowaxhcpecbzi PGPASSWORD=9bb1e5fa868b59b15139f428e53093270bcd8e24badbbe8769993409a38aa156 
+heroku pg:pull  postgresql-parallel-33995 mylocaldb --app int20h-rmrf-test
 #configuring for local use
 echo "[ ] Configuring python and heroku to run locally"
 python3 manage.py collectstatic
-heroku local &
+heroku local
 echo "[+] OK"
 echo "[+] All must work now if not please write to t.me/verbalius"
 echo "[---------------------------------------------------------]"
