@@ -55,14 +55,14 @@ read -r -p "[*] Did you put your ssh key on repo? [y/N] " response
 case "$response" in
     [yY][eE][sS]|[yY])
 		cd ~
-  		git clone git@github.com:rmrf-int20h/test_task.git
+  		git clone git@github.com:rmrf-int20h/face_recognition.git
         ;;
     *)
         cd ~ 
-        git clone https://github.com/rmrf-int20h/test_task.git
+        git clone https://github.com/rmrf-int20h/face_recognition.git
         ;;
 esac
-cd ~/test_task
+cd ~/face_recognition
 #additional install of packets
 echo "[ ] Verifying python3 modules"
 pip3 install -r requirements.txt
