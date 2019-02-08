@@ -3,7 +3,7 @@ import React, { Component, Fragment } from 'react';
 // internal
 import Emotions from '../src/components/Emotions/Emotions';
 import Spinner from '../src/components/Spinner/Spinner';
-import GalleryBuilder from './containers/GalleryBuilder/GalleryBuilder';
+import GalleryBuilder from '../src/components/GalleryBuilder/GalleryBuilder';
 import axios from './axios';
 // style
 import './App.css';
@@ -31,27 +31,29 @@ class App extends Component {
                     photoURLs.push(photoURL);
                 });
 
-                this.setState({
-                    isLoading: false,
-                    photos: photoURLs
-                });
+                this.setState({ isLoading: false, photos: photoURLs });
             });
     }
 
-  render() {
-    let content = <Spinner/>;
-
-    if (!this.state.isLoading) {
-        content = (
-            <Fragment>
-                <Emotions/>
-                <GalleryBuilder photos={this.state.photos} />
-            </Fragment>
-        );
+    getEmotionPhotos = emotion => {
+        console.log(emotion);
+        // TODO: POST method for get photos by emotion type.
     }
 
-    return content;
-  }
+    render() {
+        let content = <Spinner/>;
+
+        if (!this.state.isLoading) {
+            content = (
+                <Fragment>
+                    <Emotions getEmotionPhotos={this.getEmotionPhotos}/>
+                    <GalleryBuilder photos={this.state.photos} />
+                </Fragment>
+            );
+        }
+
+        return content;
+    }
 }
 
 export default App;
