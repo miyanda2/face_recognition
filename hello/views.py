@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from database import create_table
+from database import db_worker
 
 from .models import Greeting
 
@@ -22,13 +22,32 @@ def db(request):
 
     return render(request, "db.html", {"greetings": greetings})
 
-def db_init(request):
-    return render(request, 'db_init.html')
+def db_managment(request):
+    return render(request, 'database_managment.html')
 
 def db_create_table(request):
-    if create_table.create():
+    if db_worker.createTable():
         logger.info('Table created successfully. views.py')
         return HttpResponse('success')
     else:
         logger.error('Table creation errored. views.py')
+        return HttpResponse('error')
+def db_delete_table(request):
+    if db_worker.deleteTable():
+        logger.info('Table dropped successfully. views.py')
+        return HttpResponse('success')
+    else:
+        logger.error('Table droping errored. views.py')
+        return HttpResponse('error')
+
+def db_select_all(request):
+    aData = db_worker.selectData();
+    return HttpResponse(aData);
+
+def db_insert_row(request):
+    if db_worker.insertData(request):
+        logger.info('Table row inserted successfully. views.py')
+        return render(request, 'database_managment.html')
+    else:
+        logger.error('Table row insertion errored. views.py')
         return HttpResponse('error')
