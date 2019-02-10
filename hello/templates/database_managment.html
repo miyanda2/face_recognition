@@ -59,6 +59,62 @@
         }
       });
     }
+    function refreshTableOnlyHappy() {
+      $.get('/db_select_emotions', {'emotions': 'happiness'}, function(data) {
+        $('#mainTableId tbody').empty();
+        if (data) {
+          console.log('Data fetched successfully');
+          toastr.success('Data fetched successfully');
+
+          let aRows = JSON.parse(data);
+          for (let i = 0; i < aRows.length; i++) {
+            let oRow = aRows[i];
+
+            $('#mainTableId tbody')
+              .append($('<tr>')
+                  .append($('<td>').append(oRow[0]))
+                  .append($('<td>').append($('<a>').attr('href', oRow[1]).text(oRow[1])))
+                  .append($('<td>').text(oRow[2]))
+                  .append($('<td>').text(oRow[4]))
+                  .append($('<td>').text(oRow[5]))
+                  .append($('<td>').text(oRow[6]))
+                  .append($('<td>').text(oRow[7]))
+                  .append($('<td>').text(oRow[8]))
+                  .append($('<td>').text(oRow[9]))
+                  .append($('<td>').text(oRow[10]))
+            );
+          }
+        }
+      });
+    }
+    function refreshTableOnlyHappyAndNeutral() {
+      $.get('/db_select_emotions', {'emotions': 'happiness/neutral'}, function(data) {
+        $('#mainTableId tbody').empty();
+        if (data) {
+          console.log('Data fetched successfully');
+          toastr.success('Data fetched successfully');
+
+          let aRows = JSON.parse(data);
+          for (let i = 0; i < aRows.length; i++) {
+            let oRow = aRows[i];
+
+            $('#mainTableId tbody')
+              .append($('<tr>')
+                  .append($('<td>').append(oRow[0]))
+                  .append($('<td>').append($('<a>').attr('href', oRow[1]).text(oRow[1])))
+                  .append($('<td>').text(oRow[2]))
+                  .append($('<td>').text(oRow[4]))
+                  .append($('<td>').text(oRow[5]))
+                  .append($('<td>').text(oRow[6]))
+                  .append($('<td>').text(oRow[7]))
+                  .append($('<td>').text(oRow[8]))
+                  .append($('<td>').text(oRow[9]))
+                  .append($('<td>').text(oRow[10]))
+            );
+          }
+        }
+      });
+    }
 
     $(document).ready(function() {
       refreshTable();
@@ -119,6 +175,12 @@
 
 <button type="button" class="btn btn-primary btn-block" onclick="refreshTable();">
   Refresh data
+</button>
+<button type="button" class="btn btn-default btn-block" onclick="refreshTableOnlyHappy();">
+  Only happy
+</button>
+<button type="button" class="btn btn-default btn-block" onclick="refreshTableOnlyHappyAndNeutral();">
+  Only happy and neutral
 </button>
 <br/>
 <table id="mainTableId" class="table table-striped">

@@ -8,10 +8,7 @@ def createTable():
     conn = False
     try:
         logger.info('Begin creating table in DB')
-        conn = psycopg2.connect(dbname='mylocaldb',
-                                user='shumyk',
-                                password='int20h',
-                                host='localhost')
+        conn = getConnection()
         cursor = conn.cursor()
 
         # faceCoords array of strings containing width/top/left/height
@@ -35,18 +32,12 @@ def createTable():
     except (Exception) as error:
         logger.error('Error while creating PostgreSQL table', error)
     finally:
-        if conn:
-            cursor.close()
-            conn.close()
-            logger.info('PostgreSQL connection is closed')
+        closeConnection(conn, cursor)
 
 def deleteTable():
     try:
         logger.info('Deleting table in DB')
-        conn = psycopg2.connect(dbname='mylocaldb',
-                                user='shumyk',
-                                password='int20h',
-                                host='localhost')
+        conn = getConnection()
         cursor = conn.cursor()
 
         drop_table_query = 'DROP TABLE images;'
@@ -58,23 +49,17 @@ def deleteTable():
     except Exception as error:
         logger.error('Error while deleting PostgreSQL table', error)
     finally:
-        if conn:
-            cursor.close()
-            conn.close()
-            logger.info('PostgreSQL connection is closed')
+        closeConnection(conn, cursor)
 
 def selectData():
     try:
         logger.info('Fetching data from DB')
-        conn = psycopg2.connect(dbname='mylocaldb',
-                                user='shumyk',
-                                password='int20h',
-                                host='localhost')
+        conn = getConnection()
         cursor = conn.cursor()
 
-        drop_table_query = 'SELECT * FROM images;'
+        select_table_query = 'SELECT * FROM images;'
 
-        cursor.execute(drop_table_query)
+        cursor.execute(select_table_query)
         images_records = cursor.fetchall()
 
         logger.info('Data fetched successfully in PostgreSQL')
@@ -82,30 +67,54 @@ def selectData():
     except Exception as error:
         logger.error('Error while fetching data from PostgreSQL table', error)
     finally:
-        if conn:
-            cursor.close()
-            conn.close()
-            logger.info('PostgreSQL connection is closed')
+        closeConnection(conn, cursor)
+
+def selectDataForEmotions(request):
+    try:
+        logger.info('Fetching data from DB')
+        conn = getConnection()
+        cursor = conn.cursor()
+
+        emotionsToWhereParts = {
+            'happiness': 'hasHappiness = true',
+            'sadness': 'hasSadness = true',
+            'neutral': 'hasNeutral = true',
+            'disgust': 'hasDisgust = true',
+            'anger': 'hasAnger = true',
+            'surprise': 'hasSurprise = true',
+            'fear': 'hasFear = true'
+        }
+
+        for key in request.GET:
+            logger.info(key + ": " + request.GET.get(key))
+
+        emotions = request.GET.get('emotions').split('/')
+        where_part = " "
+        for emotion in emotions:
+            if emotion in emotionsToWhereParts:
+                where_part = appendEmotionToWhere(where_part, emotionsToWhereParts.get(emotion))
+
+        select_table_query = 'SELECT * FROM images WHERE ' + where_part + ';'
+
+        cursor.execute(select_table_query)
+        images_records = cursor.fetchall()
+
+        logger.info('Data fetched successfully in PostgreSQL')
+        return json.dumps(images_records)
+    except Exception as error:
+        logger.error('Error while fetching data from PostgreSQL table', error)
+    finally:
+        closeConnection(conn, cursor)
 
 def insertData(request):
     try:
         logger.info('Inserting data from DB')
-        conn = psycopg2.connect(dbname='mylocaldb',
-                                user='shumyk',
-                                password='int20h',
-                                host='localhost')
+        conn = getConnection()
         cursor = conn.cursor()
 
         insert_query = """INSERT INTO images
             (url, faceToken, hasHappiness, hasSadness, hasNeutral, hasDisgust, hasAnger, hasSurprise, hasFear)
              VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-
-        for key in request.GET:
-            logger.info('key: ' + key + ', value: ' + request.GET[key])
-
-        for key in request:
-            logger.info('request object:')
-            logger.info('key: ' + key + ', value: ' + request[key])
 
         record_to_insert = (request.GET.get('url'),
                             request.GET.get('facetoken'),
@@ -124,7 +133,23 @@ def insertData(request):
     except Exception as error:
         logger.error('Error while inserted data in PostgreSQL table', error)
     finally:
-        if conn:
-            cursor.close()
-            conn.close()
-            logger.info('PostgreSQL connection is closed')
+        closeConnection(conn, cursor)
+
+
+# UTILS METHODS
+def getConnection():
+    return psycopg2.connect(dbname='mylocaldb',
+                            user='shumyk',
+                            password='int20h',
+                            host='localhost')
+def closeConnection(connection, cursor):
+    if connection:
+        cursor.close()
+        connection.close()
+        logger.info('PostgreSQL connection is closed')
+def appendEmotionToWhere(where, clause):
+    if len(where) > 1:
+        where += ' and ' + clause
+    else:
+        where += clause
+    return where

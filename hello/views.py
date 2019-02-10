@@ -43,6 +43,9 @@ def db_delete_table(request):
 def db_select_all(request):
     aData = db_worker.selectData();
     return HttpResponse(aData);
+def db_select_emotions(request):
+    aData = db_worker.selectDataForEmotions(request);
+    return HttpResponse(aData);
 
 def db_insert_row(request):
     if db_worker.insertData(request):

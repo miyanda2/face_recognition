@@ -22,5 +22,6 @@ urlpatterns = [
     path('db_create_table/', hello.views.db_create_table, name='db_create_table'),
     path('db_delete_table/', hello.views.db_delete_table, name='db_delete_table'),
     path('db_select_all/', hello.views.db_select_all, name='db_select_all'),
-    path('db_insert_row/', hello.views.db_insert_row, name='db_insert_row')
+    path('db_insert_row/', hello.views.db_insert_row, name='db_insert_row'),
+    path('db_select_emotions/', hello.views.db_select_emotions, name='db_select_emotions')
 ]
